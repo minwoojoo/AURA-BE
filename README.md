@@ -2,13 +2,13 @@
 
 AI 기반 상품 홍보 블로그 자동 생성 서비스 AURA의 백엔드 API 서버입니다.
 
+## 프로젝트 소개
+
 AURA는 상품 정보와 트렌드 키워드를 기반으로 홍보용 블로그 콘텐츠를 자동 생성하고, 생성된 콘텐츠의 수정, 예약 발행, 업로드 채널 설정, 운영 로그 추적, 대시보드 모니터링을 제공하는 AI 콘텐츠 운영 플랫폼입니다.
 
 본 저장소는 Spring Boot 기반 백엔드 애플리케이션과 운영 환경 배포를 위한 Docker, AWS 인프라, CI/CD 구성을 포함합니다.
 
-## 담당 역할
-
-핵심 백엔드 및 인프라/DevOps 엔지니어로 참여했습니다.
+## 핵심 기여 요약
 
 - LLM 채널 및 설정 관리 도메인 설계
 - 설정 조회/수정 REST API 구현 및 예외 처리
@@ -19,7 +19,13 @@ AURA는 상품 정보와 트렌드 키워드를 기반으로 홍보용 블로그
 - AWS ECR/ECS 기반 무중단 배포 파이프라인 구축
 - ECS Circuit Breaker, CloudWatch 기반 장애 대응 및 모니터링 구성
 
-## 핵심 성과
+## 개인 담당 및 기여 내용
+
+핵심 백엔드 및 인프라/DevOps 엔지니어로 참여했습니다.
+
+LLM 설정 관리, 콘텐츠 생성 흐름과 연동되는 백엔드 API, 운영 환경 배포 구조, AWS 기반 인프라 자동화, CI/CD 파이프라인, 프로덕션 API 연동 안정화 등 서비스 운영에 필요한 백엔드와 배포 영역 전반을 담당했습니다.
+
+## 역할 및 핵심 구현 성과
 
 ### 동적 LLM 설정 구조 설계
 
@@ -69,6 +75,42 @@ PR 머지 이후 테스트, 이미지 빌드, ECR Push, ECS 롤링 배포가 자
 - ECS Circuit Breaker 기반 자동 롤백 체계 도입
 - CloudWatch 모니터링 및 알람 기반 장애 감지 체계 구성
 
+## 상세 기술 기여
+
+### 설정 관리 API 설계
+
+LLM, 업로드 채널, 알림 Credential, 예약 발행 설정처럼 운영자가 변경할 수 있는 값을 독립된 설정 도메인으로 분리했습니다.
+
+- 설정 조회/수정 요청과 응답 DTO를 분리해 API 계약 명확화
+- 사용자별 설정 조회 흐름과 기본 설정 바인딩 검증 구현
+- 설정 누락, 중복, 필수 값 누락 상황에 대한 도메인 예외 처리
+
+### 외부 AI/Python 서버 연동
+
+콘텐츠 생성 요청이 외부 AI/Python 서버와 안정적으로 연동되도록 백엔드 API 연결 구조를 정리했습니다.
+
+- 상품 기반 콘텐츠 생성 요청 흐름 구현
+- 트렌드 키워드 기반 콘텐츠 생성 요청 흐름 구현
+- 외부 서버 URL을 환경 변수로 분리해 환경별 실행 구조 지원
+
+### DB 마이그레이션 관리
+
+Flyway를 사용해 스키마 변경 이력을 관리했습니다.
+
+| Migration | 설명 |
+| --- | --- |
+| `V10__add_warn_logtype_add_keyword_drop_trend_fk_remove_llm_columns.sql` | 로그 타입 추가, 콘텐츠 키워드 추가, LLM 불필요 컬럼 제거 |
+| `V11__add_generation_type_to_llm_channel.sql` | LLM 채널 생성 타입 컬럼 추가 |
+| `V12__insert_product_category.sql` | 상품 카테고리 초기 데이터 추가 |
+
+## 기술적 문제 해결 및 최적화
+
+### 프로덕션 API 연결 문제 해결
+
+AWS 프로덕션 환경 이관 과정에서 프론트엔드와 백엔드 간 API Base URL, CORS 허용 도메인, Endpoint 경로가 일치하지 않아 API 호출이 실패하거나 반복 호출되는 문제를 확인했습니다.
+
+환경별 API 연결 값을 재정리하고 CORS 정책과 Endpoint 사용 방식을 맞춰 프로덕션 환경에서도 안정적으로 API 통신이 가능하도록 개선했습니다.
+
 ### 배포 환경 변수 유실 문제 해결
 
 AWS 콘솔에서 수동으로 설정했던 컨테이너 환경 변수가 자동 배포 과정에서 초기화되는 문제를 해결했습니다.
@@ -77,7 +119,15 @@ AWS 콘솔에서 수동으로 설정했던 컨테이너 환경 변수가 자동 
 - 배포 스크립트 및 인프라 설정 레이어에서 필수 환경 변수 명시 주입
 - DB 연결 정보, API URL, Secret 값이 배포 이후에도 안정적으로 유지되도록 개선
 
-## 주요 기능
+### 운영 안정성 개선
+
+- ECS Rolling Deployment로 무중단 배포 흐름 구성
+- ECS Circuit Breaker로 배포 실패 시 자동 롤백
+- CloudWatch로 로그 및 인프라 상태 모니터링
+- Secrets Manager로 민감 정보 암호화 관리
+- 배포 스크립트 레이어에서 필수 환경 변수 명시 주입
+
+## 프로젝트 주요 기능
 
 ### 회원 및 인증
 
@@ -290,20 +340,31 @@ Oracle DB와 Spring Boot 애플리케이션을 함께 실행합니다.
 http://localhost:8080/swagger-ui/index.html
 ```
 
-## DB 마이그레이션
+## Git & 작업 플로우
 
-Flyway를 사용해 스키마 변경 이력을 관리합니다.
+### 브랜치 네이밍
 
-| Migration | 설명 |
+| Branch | 용도 |
 | --- | --- |
-| `V10__add_warn_logtype_add_keyword_drop_trend_fk_remove_llm_columns.sql` | 로그 타입 추가, 콘텐츠 키워드 추가, LLM 불필요 컬럼 제거 |
-| `V11__add_generation_type_to_llm_channel.sql` | LLM 채널 생성 타입 컬럼 추가 |
-| `V12__insert_product_category.sql` | 상품 카테고리 초기 데이터 추가 |
+| `main` | 운영 배포용 |
+| `dev` | 개발 통합 |
+| `feat-#` | 기능 단위 |
+| `refactor-#` | 리팩토링 |
+| `fix-#` | 버그 수정 |
+| `hotfix-#` | 긴급 수정 |
 
-## 운영 안정성
+### PR 제목 예시
 
-- ECS Rolling Deployment로 무중단 배포 흐름 구성
-- ECS Circuit Breaker로 배포 실패 시 자동 롤백
-- CloudWatch로 로그 및 인프라 상태 모니터링
-- Secrets Manager로 민감 정보 암호화 관리
-- 배포 스크립트 레이어에서 필수 환경 변수 명시 주입
+- `[Feat] 회원가입 API 추가`
+- `[Fix] 로그인 비밀번호 검증 오류 수정`
+- `[Refactor] JWT 토큰 검증 로직 분리`
+- `[Chore] logback 설정 변경`
+- `[Hotfix] 세션 만료 버그 수정`
+- `[Merge] 진행상황 공유`
+
+### 배포 전략
+
+- `main` 브랜치 Pull Request 머지 시 GitHub Actions 기반 자동 배포
+- PR 단위 테스트, 이미지 빌드, ECR Push, ECS 롤링 배포 흐름 구성
+- 배포 실패 시 ECS Circuit Breaker 기반 자동 롤백
+- 운영 환경 설정은 AWS Secrets Manager와 배포 환경 변수로 관리
