@@ -8,6 +8,8 @@ AURA는 상품 정보와 트렌드 키워드를 기반으로 홍보용 블로그
 
 본 저장소는 Spring Boot 기반 백엔드 애플리케이션과 운영 환경 배포를 위한 Docker, AWS 인프라, CI/CD 구성을 포함합니다.
 
+<br>
+
 ## 핵심 기여 요약
 
 - LLM 채널 및 설정 관리 도메인 설계
@@ -19,11 +21,15 @@ AURA는 상품 정보와 트렌드 키워드를 기반으로 홍보용 블로그
 - AWS ECR/ECS 기반 무중단 배포 파이프라인 구축
 - ECS Circuit Breaker, CloudWatch 기반 장애 대응 및 모니터링 구성
 
+<br>
+
 ## 개인 담당 및 기여 내용
 
 핵심 백엔드 및 인프라/DevOps 엔지니어로 참여했습니다.
 
 LLM 설정 관리, 콘텐츠 생성 흐름과 연동되는 백엔드 API, 운영 환경 배포 구조, AWS 기반 인프라 자동화, CI/CD 파이프라인, 프로덕션 API 연동 안정화 등 서비스 운영에 필요한 백엔드와 배포 영역 전반을 담당했습니다.
+
+<br>
 
 ## 역할 및 핵심 구현 성과
 
@@ -75,6 +81,8 @@ PR 머지 이후 테스트, 이미지 빌드, ECR Push, ECS 롤링 배포가 자
 - ECS Circuit Breaker 기반 자동 롤백 체계 도입
 - CloudWatch 모니터링 및 알람 기반 장애 감지 체계 구성
 
+<br>
+
 ## 상세 기술 기여
 
 ### 설정 관리 API 설계
@@ -103,6 +111,8 @@ Flyway를 사용해 스키마 변경 이력을 관리했습니다.
 | `V11__add_generation_type_to_llm_channel.sql` | LLM 채널 생성 타입 컬럼 추가 |
 | `V12__insert_product_category.sql` | 상품 카테고리 초기 데이터 추가 |
 
+<br>
+
 ## 기술적 문제 해결 및 최적화
 
 ### 프로덕션 API 연결 문제 해결
@@ -126,6 +136,8 @@ AWS 콘솔에서 수동으로 설정했던 컨테이너 환경 변수가 자동 
 - CloudWatch로 로그 및 인프라 상태 모니터링
 - Secrets Manager로 민감 정보 암호화 관리
 - 배포 스크립트 레이어에서 필수 환경 변수 명시 주입
+
+<br>
 
 ## 프로젝트 주요 기능
 
@@ -176,6 +188,8 @@ AWS 콘솔에서 수동으로 설정했던 컨테이너 환경 변수가 자동 
 - 콘텐츠 상태 통계
 - 일별 클릭 수 및 콘텐츠 개수 집계
 
+<br>
+
 ## 기술 스택
 
 ### Backend
@@ -217,6 +231,8 @@ AWS 콘솔에서 수동으로 설정했던 컨테이너 환경 변수가 자동 
 - Spring Boot Test
 - Spring Security Test
 
+<br>
+
 ## 프로젝트 구조
 
 ```text
@@ -251,6 +267,8 @@ Final-BE/
 └── README.md
 ```
 
+<br>
+
 ## 아키텍처
 
 AURA 백엔드는 도메인 중심의 레이어드 아키텍처를 따릅니다.
@@ -263,6 +281,8 @@ AURA 백엔드는 도메인 중심의 레이어드 아키텍처를 따릅니다.
 | Domain | 핵심 도메인 모델 |
 | DTO | 요청/응답 데이터 전달 |
 | Core/Config | Security, JWT, Swagger, Scheduler, 예외 처리 등 공통 인프라 |
+
+<br>
 
 ## 주요 API
 
@@ -288,6 +308,8 @@ AURA 백엔드는 도메인 중심의 레이어드 아키텍처를 따릅니다.
 | Dashboard | `GET /api/dashboard/status` | 콘텐츠 상태 통계 |
 | Log | `GET /api/log` | 로그 조회 |
 | Log | `GET /api/pipeline/{jobId}` | 파이프라인 로그 스트리밍 |
+
+<br>
 
 ## 실행 방법
 
@@ -339,6 +361,8 @@ Oracle DB와 Spring Boot 애플리케이션을 함께 실행합니다.
 ```text
 http://localhost:8080/swagger-ui/index.html
 ```
+
+<br>
 
 ## Git & 작업 플로우
 
