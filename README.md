@@ -8,6 +8,8 @@ AURA는 상품 정보와 트렌드 키워드를 기반으로 홍보용 블로그
 
 본 저장소는 Spring Boot 기반 백엔드 애플리케이션과 운영 환경 배포를 위한 Docker, AWS 인프라, CI/CD 구성을 포함합니다.
 
+AI 콘텐츠 생성 기능은 별도 AI 서비스 레포지토리인 [AURA-PY](https://github.com/minwoojoo/AURA-PY)와 연동되어 동작합니다.
+
 <br>
 
 ## 서비스 화면
@@ -326,6 +328,29 @@ Final-BE/
 ## 아키텍처
 
 AURA 백엔드는 도메인 중심의 레이어드 아키텍처를 따릅니다.
+
+```mermaid
+flowchart LR
+    Client[Client / Frontend]
+    Backend[AURA Backend<br/>Spring Boot]
+    DB[(Oracle Database)]
+    AI[AURA-PY AI Service<br/>Python]
+
+    Client -->|REST API 요청| Backend
+    Backend -->|MyBatis Mapper<br/>도메인 데이터 조회/저장| DB
+    Backend -->|RestClient<br/>콘텐츠 생성/업로드 요청| AI
+    AI -->|생성 결과 및 작업 상태 응답| Backend
+    Backend -->|콘텐츠, 로그, 설정 저장| DB
+    Backend -->|API 응답| Client
+
+    Env[Environment Variables<br/>SPRING_DATASOURCE_URL<br/>PYTHON_URL]
+    Env -.->|DB 연결 정보| Backend
+    Env -.->|AI 서비스 URL| Backend
+```
+
+- 백엔드는 `SPRING_DATASOURCE_URL` 기반으로 Oracle DB에 연결하고, MyBatis Mapper를 통해 주요 도메인 데이터를 조회/저장합니다.
+- AI 콘텐츠 생성 및 업로드 요청은 `PYTHON_URL`로 주입된 [AURA-PY](https://github.com/minwoojoo/AURA-PY) 서비스에 `RestClient`로 전달됩니다.
+- AI 서비스의 생성 결과와 작업 상태는 백엔드 API를 통해 관리되며, 콘텐츠/로그/설정 데이터는 DB에 저장됩니다.
 
 | Layer | 역할 |
 | --- | --- |
