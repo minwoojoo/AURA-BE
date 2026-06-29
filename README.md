@@ -8,6 +8,8 @@ AURA는 상품 정보와 트렌드 키워드를 기반으로 홍보용 블로그
 
 본 저장소는 Spring Boot 기반 백엔드 애플리케이션과 운영 환경 배포를 위한 Docker, AWS 인프라, CI/CD 구성을 포함합니다.
 
+프론트엔드 페이지는 React 기반 레포지토리인 [AURA-FE](https://github.com/minwoojoo/Final-FE-fork)와 연동되어 동작합니다.
+
 AI 콘텐츠 생성 기능은 별도 AI 서비스 레포지토리인 [AURA-PY](https://github.com/minwoojoo/AURA-PY)와 연동되어 동작합니다.
 
 <br>
